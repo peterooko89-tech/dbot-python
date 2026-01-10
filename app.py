@@ -6,12 +6,15 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "super-secret-key-change-this"
+app.secret_key = os.getenv("FLASK_SECRET_KEY", "super-secret-key-change-this")
 
 # Deriv OAuth config
 APP_ID = os.getenv("DERIV_APP_ID")          # 76613
 OAUTH_URL = os.getenv("DERIV_OAUTH_URL")    # https://oauth.deriv.com/oauth2/authorize
-REDIRECT_URI = "http://127.0.0.1:5000/oauth"
+
+# Use environment variable for deployed URL or default to localhost
+BASE_URL = os.getenv("BASE_URL", "http://127.0.0.1:5000")
+REDIRECT_URI = f"{BASE_URL}/oauth"
 
 
 # ------------------------
@@ -79,4 +82,5 @@ def logout():
 # RUN SERVER
 # ------------------------
 if __name__ == "__main__":
-    app.run(host="127.0.0.1", port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render or default port
+    app.run(host="0.0.0.0", port=port, debug=True)
