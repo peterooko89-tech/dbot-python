@@ -1,6 +1,17 @@
-from flask import Flask, redirect, request, session, render_template, url_for
+from flask import (
+    Flask,
+    redirect,
+    request,
+    session,
+    render_template,
+    url_for,
+    jsonify,
+)
 import os
 from dotenv import load_dotenv
+
+# Strategy save logic
+from backend.strategies.save_strategy import save_strategy
 
 # Load .env variables
 load_dotenv()
@@ -46,7 +57,7 @@ def login():
 
 # ------------------------
 # OAUTH CALLBACK PAGE
-# (Receives token from URL fragment)
+# (Receives token from URL fragment via JS)
 # ------------------------
 @app.route("/oauth", methods=["GET"])
 def oauth_page():
@@ -58,6 +69,7 @@ def oauth_page():
 @app.route("/oauth", methods=["POST"])
 def oauth():
     token = request.form.get("token")
+
     if not token:
         return "OAuth failed: token not received", 400
 
@@ -73,6 +85,28 @@ def dashboard():
         return redirect(url_for("index"))
 
     return render_template("dashboard.html")
+
+# ------------------------
+# STRATEGY BUILDER UI
+# ------------------------
+@app.route("/strategy")
+def strategy_builder():
+    if "deriv_token" not in session:
+        return redirect(url_for("index"))
+
+    return render_template("strategy_builder.html")
+
+# ------------------------
+# SAVE STRATEGY API
+# ------------------------
+@app.route("/api/save-strategy", methods=["POST"])
+def api_save_strategy():
+    if "deriv_token" not in session:
+        return jsonify({"error": "Unauthorized"}), 401
+
+    data = request.json
+    result = save_strategy(data)
+    return jsonify(result)
 
 # ------------------------
 # LOGOUT

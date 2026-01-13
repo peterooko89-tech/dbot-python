@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Strategy Builder</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<h2>🧠 Strategy Builder (DBot Style)</h2>
+
+<div class="builder">
+
+    <div class="block">
+        <label>Market</label>
+        <select id="market">
+            <option value="R_100">Volatility 100</option>
+            <option value="R_50">Volatility 50</option>
+        </select>
+    </div>
+
+    <div class="block">
+        <label>Condition</label>
+        <select id="condition">
+            <option value="rise">Price Rises</option>
+            <option value="fall">Price Falls</option>
+        </select>
+    </div>
+
+    <div class="block">
+        <label>Stake ($)</label>
+        <input type="number" id="stake" value="1">
+    </div>
+
+    <button onclick="saveStrategy()">💾 Save Strategy</button>
+</div>
+
+<pre id="output"></pre>
+
+<script src="/static/js/strategy.js"></script>
+</body>
+</html>

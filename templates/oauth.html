@@ -1,25 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Authorizing...</title>
+    <title>OAuth Processing</title>
 </head>
 <body>
-<script>
-  const hash = window.location.hash.substring(1);
-  const params = new URLSearchParams(hash);
-  const token = params.get("token1");
+    <h3>Logging you in…</h3>
 
-  if (!token) {
-    document.body.innerText = "OAuth failed: token not found";
-  } else {
-    fetch("/oauth", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: "token=" + token
-    }).then(() => {
-      window.location.href = "/dashboard";
-    });
-  }
-</script>
+    <form id="tokenForm" method="POST" action="/oauth">
+        <input type="hidden" name="token" id="tokenInput">
+    </form>
+
+    <script>
+        // Read token from URL fragment
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        const token = params.get("token");
+
+        if (!token) {
+            document.body.innerHTML = "<h2>OAuth failed: token not found</h2>";
+        } else {
+            document.getElementById("tokenInput").value = token;
+            document.getElementById("tokenForm").submit();
+        }
+    </script>
 </body>
 </html>
